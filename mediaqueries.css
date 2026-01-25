@@ -8,7 +8,6 @@
     }
 }
 
-
 @media screen and (max-width:1200px) {
     #desktop-nav {
         display: none;
@@ -39,6 +38,53 @@
     }
     .about-container {
         margin-top: 0;
+    }
+    .details-container.color-container {
+        min-width: 280px;
+        max-width: 350px;
+    }
+    .project-img {
+        height: 150px;
+    }
+}
+
+@media screen and (max-width:900px) {
+    .about-containers {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .experience-details-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    .details-container {
+        max-width: 95vw;
+        min-width: 280px;
+        padding: 1rem;
+    }
+    .details-container.color-container {
+        min-width: 280px;
+        max-width: 90vw;
+        min-height: 320px;
+    }
+    .project-img {
+        height: 140px;
+        width: 85%;
+    }
+    .title {
+        font-size: 2.5rem;
+    }
+    .experience-sub-title {
+        font-size: 1.5rem;
+    }
+    #typewriter {
+        font-size: 1rem;
+    }
+    #theme-switcher {
+        font-size: 1.25rem;
+        margin-left: 0.5rem;
     }
 }
 
@@ -86,9 +132,77 @@
     font-size: 1.25rem;
    }
    .title {
-    font: 2rem;
+    font-size: 2rem;
    }
    .text-container {
     text-align: justify;
    }
+   .details-container {
+       max-width: 95vw;
+       min-width: 200px;
+       padding: 0.75rem;
+   }
+   .details-container.color-container {
+       min-width: 200px;
+       max-width: 95vw;
+       min-height: 280px;
+   }
+   .project-img {
+       height: 120px;
+       width: 80%;
+   }
+   .project-title {
+       font-size: 1.25rem;
+       margin: 0.25rem 0 0.125rem 0;
+   }
+   .btn {
+       padding: 0.75rem;
+       width: 6rem;
+       font-size: 0.9rem;
+   }
+   #typewriter {
+       font-size: 0.9rem;
+   }
+   #theme-switcher {
+       font-size: 1rem;
+       margin-left: 0.25rem;
+   }
+   .about-containers {
+       gap: 0.5rem;
+   }
+   .experience-details-container {
+       gap: 0.5rem;
+   }
+}
+
+@media screen and (max-width:400px) {
+    .details-container {
+        min-width: 160px;
+        padding: 0.5rem;
+    }
+    .details-container.color-container {
+        min-width: 160px;
+        min-height: 240px;
+    }
+    .project-img {
+        height: 100px;
+        width: 75%;
+    }
+    .title {
+        font-size: 1.75rem;
+    }
+    .experience-sub-title {
+        font-size: 1.1rem;
+    }
+    .btn {
+        padding: 0.5rem;
+        width: 5rem;
+        font-size: 0.8rem;
+    }
+    #typewriter {
+        font-size: 0.8rem;
+    }
+    .section__text__p2 {
+        font-size: 1rem;
+    }
 }

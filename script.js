@@ -1,84 +1,68 @@
 // TypeScript version of the script with all requested features
-
 // Hamburger menu toggle
-function toggleMenu(): void {
-    const menu = document.querySelector('.menu-links') as HTMLElement | null;
-    const icon = document.querySelector('.hamburger-icon') as HTMLElement | null;
+function toggleMenu() {
+    var menu = document.querySelector('.menu-links');
+    var icon = document.querySelector('.hamburger-icon');
     if (menu && icon) {
         menu.classList.toggle('open');
         icon.classList.toggle('open');
     }
 }
-
 // Theme Switcher (Light/Dark Mode)
-const themeSwitcher = document.getElementById('theme-switcher') as HTMLButtonElement | null;
+var themeSwitcher = document.getElementById('theme-switcher');
 if (themeSwitcher) {
-    themeSwitcher.addEventListener('click', () => {
+    themeSwitcher.addEventListener('click', function () {
         document.body.classList.toggle('dark-theme');
         if (document.body.classList.contains('dark-theme')) {
             themeSwitcher.textContent = '☀️';
-        } else {
+        }
+        else {
             themeSwitcher.textContent = '🌙';
         }
     });
 }
-
-// Typewriter Effect
-interface TypewriterOptions {
-    texts: string[];
-    typeSpeed?: number;
-    deleteSpeed?: number;
-    pause?: number;
-    loop?: boolean;
-}
-
-class Typewriter {
-    private element: HTMLElement;
-    private texts: string[];
-    private typeSpeed: number;
-    private deleteSpeed: number;
-    private pause: number;
-    private loop: boolean;
-    private textIndex: number = 0;
-    private charIndex: number = 0;
-    private isDeleting: boolean = false;
-
-    constructor(element: HTMLElement, options: TypewriterOptions) {
+var Typewriter = /** @class */ (function () {
+    function Typewriter(element, options) {
+        var _a;
+        this.textIndex = 0;
+        this.charIndex = 0;
+        this.isDeleting = false;
         this.element = element;
         this.texts = options.texts;
         this.typeSpeed = options.typeSpeed || 100;
         this.deleteSpeed = options.deleteSpeed || 50;
         this.pause = options.pause || 1500;
-        this.loop = options.loop ?? true;
+        this.loop = (_a = options.loop) !== null && _a !== void 0 ? _a : true;
         this.type();
     }
-
-    private type() {
-        const currentText = this.texts[this.textIndex];
+    Typewriter.prototype.type = function () {
+        var _this = this;
+        var currentText = this.texts[this.textIndex];
         if (this.isDeleting) {
             this.charIndex--;
             this.element.textContent = currentText.substring(0, this.charIndex);
-        } else {
+        }
+        else {
             this.charIndex++;
             this.element.textContent = currentText.substring(0, this.charIndex);
         }
-
-        let timeout = this.isDeleting ? this.deleteSpeed : this.typeSpeed;
-
+        var timeout = this.isDeleting ? this.deleteSpeed : this.typeSpeed;
         if (!this.isDeleting && this.charIndex === currentText.length) {
             timeout = this.pause;
             this.isDeleting = true;
-        } else if (this.isDeleting && this.charIndex === 0) {
+        }
+        else if (this.isDeleting && this.charIndex === 0) {
             this.isDeleting = false;
             this.textIndex = (this.textIndex + 1) % this.texts.length;
             timeout = this.typeSpeed;
-            if (!this.loop && this.textIndex === 0) return;
+            if (!this.loop && this.textIndex === 0)
+                return;
         }
-        setTimeout(() => this.type(), timeout);
-    }
-}
-
-const typewriterElement = document.getElementById('typewriter') as HTMLElement | null;
+        setTimeout(function () { return _this.type(); }, timeout);
+    };
+    return Typewriter;
+}());
+var typewriterElement = document.getElementById('typewriter');
 if (typewriterElement) {
     new Typewriter(typewriterElement, {
         texts: [
@@ -92,4 +76,3 @@ if (typewriterElement) {
         loop: true,
     });
 }
-
