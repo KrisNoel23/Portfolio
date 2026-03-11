@@ -1,4 +1,4 @@
-import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
+import { SectionLabel, SectionTitle } from "./SectionUI.ts";
 
 interface Skill {
   icon: string;

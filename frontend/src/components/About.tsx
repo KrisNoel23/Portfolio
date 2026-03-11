@@ -1,4 +1,4 @@
-import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
+import { SectionLabel, SectionTitle } from "./SectionUI.ts";
 
 interface StatCard {
   number: string;
@@ -15,7 +15,7 @@ const TAGS: string[] = [
   "🎵 Music + Mood",
   "🏋️ Gym Rat",
   "✈️ Wanderlust",
-  "📖 Lifelong Reader",
+  "📖 Lifelong Reader and Learner",
   "🇹🇹 Trini Roots",
   "☁️ Cloud Curious",
 ];
