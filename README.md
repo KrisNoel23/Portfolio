@@ -1,126 +1,167 @@
-# Kristopher Noel — Personal Portfolio
+# Kristopher Noel — Portfolio
 
-> A personal portfolio website built to represent who I am as a software engineer — my projects, my stack, and the story behind how I got here.
+> React 18 + Vite + **TypeScript** frontend · **FastAPI** Python backend · Gmail SMTP contact form
 
-🌐 **Live Site:** [krisnoelportfolio.netlify.app](https://krisnoelportfolio.netlify.app)
-
----
-
-## What Is This?
-
-This is my personal portfolio website — a single-page application designed to introduce me to potential employers, collaborators, and anyone curious about my work. It showcases my featured projects, technical skills, background, and how to get in touch with me.
+🌐 **Live:** [krisnoelportfolio.netlify.app](https://krisnoelportfolio.netlify.app)
 
 ---
 
-## Why I Built It
+## Project Structure
 
-Breaking into software engineering without a traditional background means the portfolio has to do a lot of heavy lifting. I needed a space that felt authentically mine — not a cookie-cutter template — but something that showed I could build real things, communicate clearly, and care about craft.
-
-I also wanted to tell my story on my own terms: a kid from Brooklyn, from a Trinidadian immigrant household, who found his way into tech through curiosity, hard work, and The Marcy Lab School. The portfolio isn't just a list of projects — it's a reflection of the journey.
+```
+portfolio/
+├── .gitignore
+├── README.md
+├── frontend/                        # React + Vite + TypeScript
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── package.json
+│   └── src/
+│       ├── main.tsx
+│       ├── App.tsx
+│       ├── index.css
+│       ├── types/
+│       │   └── index.ts             # Shared interfaces (Project, Skill, etc.)
+│       ├── assets/
+│       │   ├── profile.jpeg         # Your graduation photo
+│       │   └── moodio.png           # Moodio screenshot
+│       └── components/
+│           ├── Cursor.tsx
+│           ├── NavBar.tsx
+│           ├── Hero.tsx             # Uses profile.jpeg
+│           ├── About.tsx
+│           ├── SectionUI.tsx        # Shared SectionLabel + SectionTitle
+│           ├── Skills.tsx
+│           ├── Projects.tsx         # Uses moodio.png + fetches /api/projects
+│           ├── Contact.tsx          # Posts to /api/contact
+│           └── Footer.tsx
+└── backend/                         # Python + FastAPI
+    ├── main.py
+    ├── requirements.txt
+    └── .env.example
+```
 
 ---
 
-## What Problem Does It Solve?
+## Quick Start
 
-**For employers:** Provides a clear, fast snapshot of who I am, what I've built, and how to reach me — without having to dig through a resume or GitHub cold.
+### Frontend
 
-**For me:** Gives me a living document I can keep updated as I grow. Every new project, certification, or skill has a home here.
+```bash
+cd frontend
+npm install
+npm run dev
+# → http://localhost:3000
+```
 
-**For the industry:** Demonstrates that non-traditional engineers — people who didn't study CS at a four-year university — can build polished, thoughtful, production-quality software.
+### Backend
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env           # then add your Gmail App Password
+uvicorn main:app --reload --port 8000
+# → http://localhost:8000
+# → http://localhost:8000/docs  (interactive API docs)
+```
+
+> Vite proxies `/api/*` → `localhost:8000` automatically — no extra config needed in dev.
 
 ---
 
-## Features
+## Migrating from Old Structure
 
-- **Dark mode by default** — designed for readability and visual impact
-- **Custom animated cursor** — a small but intentional design detail
-- **Typewriter effect** — rotating phrases that reflect my voice and current status
-- **Scroll-triggered reveal animations** — sections animate in as you scroll
-- **Fully responsive** — mobile hamburger menu, fluid layouts across all screen sizes
-- **Featured project section** — Moodio (my capstone) gets the spotlight it deserves
-- **Skills grid with AWS cert badge** — shows current stack and what I'm actively learning
-- **Personality-forward About section** — stats, fun facts, and real context about my background
+Your old files map to the new structure like this:
+
+| Old location                     | New location               | Notes                   |
+| -------------------------------- | -------------------------- | ----------------------- |
+| `index.html`                     | `frontend/index.html`      | Rewritten for Vite      |
+| `style.css` + `mediaqueries.css` | `frontend/src/index.css`   | Merged + cleaned        |
+| `script.ts`                      | `frontend/src/components/` | Split into components   |
+| `script.js`                      | ❌ Deleted                 | TypeScript only         |
+| `assets/`                        | `frontend/src/assets/`     | Move images here        |
+| `venv/`                          | `backend/venv/`            | Belongs with backend    |
+| `package.json`                   | `frontend/package.json`    | Replaced by Vite config |
+
+---
+
+## Adding a New Project
+
+Edit `backend/main.py` — add to the `PROJECTS` list:
+
+```python
+Project(
+    id=3,
+    featured=False,
+    badge="Personal Project",
+    title="Your Project Name",
+    desc="What it does and why it matters.",
+    stack=["React", "FastAPI", "PostgreSQL"],
+    gradient="linear-gradient(135deg, #yourcolor 0%, #0d0d0f 100%)",
+    emoji="🚀",
+    github="https://github.com/Kristopher-Noel/your-repo",
+    demo="https://your-live-url.com",
+)
+```
+
+Then add a screenshot to `frontend/src/assets/` and reference it in `Projects.tsx`.
+
+---
+
+## Gmail App Password Setup
+
+1. Go to [myaccount.google.com](https://myaccount.google.com) → **Security**
+2. Enable **2-Step Verification**
+3. Go to **App Passwords** → Mail → Generate
+4. Paste the 16-character code into `.env` as `GMAIL_APP_PASS`
+
+Without these, the backend logs submissions to the console (dev mode).
+
+---
+
+## API Endpoints
+
+| Method | Endpoint        | Description             |
+| ------ | --------------- | ----------------------- |
+| `GET`  | `/`             | Health check            |
+| `GET`  | `/api/projects` | All projects as JSON    |
+| `POST` | `/api/contact`  | Send contact form email |
+| `POST` | `/api/ping`     | Visitor analytics ping  |
+
+---
+
+## Deployment
+
+### Frontend → Netlify
+
+```bash
+cd frontend && npm run build
+# Deploy /dist to Netlify
+```
+
+### Backend → Render
+
+- Root directory: `backend`
+- Build: `pip install -r requirements.txt`
+- Start: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Add env vars: `GMAIL_USER`, `GMAIL_APP_PASS`, `NOTIFY_EMAIL`
 
 ---
 
 ## Tech Stack
 
-| Layer      | Technology                                                                                                                   |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Markup     | HTML5                                                                                                                        |
-| Styling    | CSS3 (custom properties, grid, flexbox, animations)                                                                          |
-| Scripting  | Vanilla JavaScript (ES6+)                                                                                                    |
-| Fonts      | [Syne](https://fonts.google.com/specimen/Syne) · [Space Mono](https://fonts.google.com/specimen/Space+Mono) via Google Fonts |
-| Deployment | [Netlify](https://netlify.com)                                                                                               |
-
-No frameworks, no build tools — intentionally written in plain HTML, CSS, and JS to keep it fast, dependency-free, and fully in my control.
-
----
-
-## Projects Featured
-
-### 🎵 Moodio _(Capstone)_
-
-A full-stack music mood-tracking app integrating the Spotify Web API and Web Playback SDK. Users log their emotional state, receive dynamic mood-based song recommendations, and build a personal favorites library — all with Spotify OAuth and real-time in-browser playback.
-
-**Stack:** React + TypeScript · Node.js · Express · PostgreSQL · Spotify Web API · OAuth · Render
-
----
-
-### 🩺 PATCH
-
-A collaborative health tracking application built as a team project. Focused on intuitive UX for logging daily wellness metrics, with a RESTful API backend and production deployment on Render.
-
-**Stack:** JavaScript · Node.js · Express · PostgreSQL
-
----
-
-### 🦞 Code Chef's Seafood
-
-A responsive restaurant website for a seafood brand. Built to practice real-world frontend layout, responsive design, and clean delivery.
-
-**Stack:** HTML · CSS · JavaScript
-
----
-
-## Getting Started (Run Locally)
-
-No build step needed — just open the file.
-
-```bash
-git clone https://github.com/Kristopher-Noel/portfolio.git
-cd portfolio
-open index.html
-```
-
-Or serve it locally with any static file server:
-
-```bash
-npx serve .
-# or
-python3 -m http.server 3000
-```
-
----
-
-## Roadmap
-
-- [ ] Add live demo links for all projects
-- [ ] Add downloadable CV/resume PDF
-- [ ] Add AWS Cloud Practitioner badge once certified
-- [ ] Add a blog or writing section
-- [ ] Integrate contact form with email delivery
-
----
-
-## Author
-
-**Kristopher Noel**
-Software Engineering Fellow · The Marcy Lab School · Brooklyn, NY
-
-📧 [noelkris500@gmail.com](mailto:noelkris500@gmail.com)
-💼 [LinkedIn](https://www.linkedin.com/in/kristhesoftwareengineer)
-🐙 [GitHub](https://github.com/Kristopher-Noel)
+| Layer           | Technology                           |
+| --------------- | ------------------------------------ |
+| Frontend        | React 18 + Vite + TypeScript         |
+| Styling         | CSS custom properties (no framework) |
+| Backend         | Python 3.12 + FastAPI                |
+| Validation      | Pydantic v2                          |
+| Email           | Gmail SMTP (`smtplib`)               |
+| Frontend deploy | Netlify                              |
+| Backend deploy  | Render                               |
 
 ---
 
