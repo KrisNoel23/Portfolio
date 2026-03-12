@@ -22,7 +22,7 @@ const FALLBACK_PROJECTS: Project[] = [
     image: moodioImg,
     gradient: "linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
     emoji: "🎵",
-    github: "https://github.com/Kristopher-Noel",
+    github: "https://github.com/moodio-project/Moodio",
     demo: undefined,
   },
   {
