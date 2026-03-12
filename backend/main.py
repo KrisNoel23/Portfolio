@@ -23,6 +23,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://localhost:3001",
         "https://krisnoelportfolio.netlify.app",
     ],
     allow_credentials=True,
@@ -71,7 +72,7 @@ PROJECTS: List[Project] = [
         ],
         gradient="linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
         emoji="🎵",
-        github="https://github.com/Kristopher-Noel",
+        github="https://github.com/Kristopher-Noel/Moodio",
         demo=None,  # Replace with live URL when available
     ),
     Project(
@@ -87,7 +88,7 @@ PROJECTS: List[Project] = [
         stack=["JavaScript", "Node.js", "Express", "PostgreSQL"],
         gradient="linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
         emoji="🩺",
-        github="https://github.com/Kristopher-Noel",
+        github="https://github.com/PATCH-KFCX/PATCH2",
         demo=None,
     ),
 ]

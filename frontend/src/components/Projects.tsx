@@ -1,4 +1,4 @@
-import { useEffect, useState, CSSProperties } from "react";
+import { useState, CSSProperties } from "react";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
@@ -204,34 +204,8 @@ function ProjectCard({
 }
 
 export default function Projects(): JSX.Element {
-  const [projects, setProjects] = useState<Project[]>(FALLBACK_PROJECTS);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    fetch("/api/projects")
-      .then((r) => {
-        if (!r.ok) throw new Error();
-        return r.json();
-      })
-      .then((data: Project[]) => {
-        const enriched = data.map((p) => ({
-          ...p,
-          image: p.id === 1 ? moodioImg : "",
-        }));
-        setProjects(enriched);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
-  // Also stop loading if fetch never fires (no backend)
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(t);
-  }, []);
-
-  const featured = projects.find((p) => p.featured);
-  const rest = projects.filter((p) => !p.featured);
+  const featured = FALLBACK_PROJECTS.find((p) => p.featured);
+  const rest = FALLBACK_PROJECTS.filter((p) => !p.featured);
 
   return (
     <section
@@ -247,34 +221,18 @@ export default function Projects(): JSX.Element {
       <SectionLabel>Work</SectionLabel>
       <SectionTitle>Projects I've built.</SectionTitle>
 
-      {loading && (
-        <p
-          style={{
-            color: "var(--muted)",
-            fontFamily: "'Space Mono', monospace",
-            fontSize: "0.85rem",
-          }}
-        >
-          Loading...
-        </p>
-      )}
-
-      {!loading && (
-        <>
-          {featured && <ProjectCard project={featured} featured />}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "1.5rem",
-            }}
-          >
-            {rest.map((p) => (
-              <ProjectCard key={p.id} project={p} />
-            ))}
-          </div>
-        </>
-      )}
+      {featured && <ProjectCard project={featured} featured />}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+          gap: "1.5rem",
+        }}
+      >
+        {rest.map((p) => (
+          <ProjectCard key={p.id} project={p} />
+        ))}
+      </div>
     </section>
   );
 }
