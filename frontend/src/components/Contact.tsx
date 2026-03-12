@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent, CSSProperties } from "react";
-import { SectionLabel } from "./SectionUI.ts";
+import { SectionLabel } from "./SectionUI.tsx";
 
 interface ContactPayload {
   name: string;

@@ -35,7 +35,7 @@ const FALLBACK_PROJECTS: Project[] = [
     image: "",
     gradient: "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
     emoji: "🩺",
-    github: "https://github.com/Kristopher-Noel",
+    github: "https://github.com/PATCH-KFCX/PATCH2",
     demo: undefined,
   },
 ];
