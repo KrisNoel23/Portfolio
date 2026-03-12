@@ -2,6 +2,7 @@ import { useState, CSSProperties } from "react";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
+import patchImg from "../assets/patch.png";
 
 const FALLBACK_PROJECTS: Project[] = [
   {
@@ -32,7 +33,7 @@ const FALLBACK_PROJECTS: Project[] = [
     title: "PATCH",
     desc: "A collaborative health tracking application built with a team. Focused on intuitive UX for logging daily wellness metrics, with a RESTful API backend and production deployment on Render.",
     stack: ["JavaScript", "Node.js", "Express", "PostgreSQL"],
-    image: "",
+    image: patchImg,
     gradient: "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
     emoji: "🩺",
     github: "https://github.com/PATCH-KFCX/PATCH2",
