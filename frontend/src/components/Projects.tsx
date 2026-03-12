@@ -1,9 +1,8 @@
 import { useEffect, useState, CSSProperties } from "react";
-import { SectionLabel, SectionTitle } from "./SectionUI.ts";
+import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
 
-// Fallback data — used when backend is unreachable
 const FALLBACK_PROJECTS: Project[] = [
   {
     id: 1,
@@ -41,7 +40,6 @@ const FALLBACK_PROJECTS: Project[] = [
   },
 ];
 
-// ── Project Card ──────────────────────────────────────────────────────────────
 interface ProjectCardProps {
   project: Project;
   featured?: boolean;
@@ -82,7 +80,6 @@ function ProjectCard({
         e.currentTarget.style.transform = "none";
       }}
     >
-      {/* Image / gradient fallback */}
       <div style={imgWrapStyle}>
         {p.image && !imgError ? (
           <img
@@ -112,21 +109,8 @@ function ProjectCard({
             {p.emoji}
           </div>
         )}
-        {/* Subtle gradient overlay on image for readability */}
-        {p.image && !imgError && (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "linear-gradient(to right, transparent 60%, var(--bg2))",
-              pointerEvents: "none",
-            }}
-          />
-        )}
       </div>
 
-      {/* Body */}
       <div
         style={{
           padding: "1.75rem",
@@ -140,7 +124,7 @@ function ProjectCard({
             fontFamily: "'Space Mono', monospace",
             fontSize: "0.65rem",
             letterSpacing: "0.15em",
-            textTransform: "uppercase",
+            textTransform: "uppercase" as CSSProperties["textTransform"],
             color: "var(--accent)",
             marginBottom: "0.75rem",
           }}
@@ -169,7 +153,6 @@ function ProjectCard({
         >
           {p.desc}
         </p>
-
         <div
           style={{
             display: "flex",
@@ -195,7 +178,6 @@ function ProjectCard({
             </span>
           ))}
         </div>
-
         <div style={{ display: "flex", gap: "0.75rem" }}>
           <a
             href={p.github}
@@ -221,31 +203,31 @@ function ProjectCard({
   );
 }
 
-// ── Section ───────────────────────────────────────────────────────────────────
 export default function Projects(): JSX.Element {
   const [projects, setProjects] = useState<Project[]>(FALLBACK_PROJECTS);
   const [loading, setLoading] = useState<boolean>(true);
-  const [fromApi, setFromApi] = useState<boolean>(false);
 
   useEffect(() => {
     fetch("/api/projects")
       .then((r) => {
-        if (!r.ok) throw new Error("API unavailable");
+        if (!r.ok) throw new Error();
         return r.json();
       })
       .then((data: Project[]) => {
-        // Inject local images for known projects
         const enriched = data.map((p) => ({
           ...p,
-          image: p.id === 1 ? moodioImg : (p.image ?? ""),
+          image: p.id === 1 ? moodioImg : "",
         }));
         setProjects(enriched);
-        setFromApi(true);
       })
-      .catch(() => {
-        /* silently use fallback */
-      })
+      .catch(() => {})
       .finally(() => setLoading(false));
+  }, []);
+
+  // Also stop loading if fetch never fires (no backend)
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(t);
   }, []);
 
   const featured = projects.find((p) => p.featured);
@@ -291,19 +273,6 @@ export default function Projects(): JSX.Element {
               <ProjectCard key={p.id} project={p} />
             ))}
           </div>
-          {fromApi && (
-            <p
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "0.65rem",
-                color: "var(--muted)",
-                marginTop: "1.5rem",
-                opacity: 0.4,
-              }}
-            >
-              ✓ loaded from API
-            </p>
-          )}
         </>
       )}
     </section>
