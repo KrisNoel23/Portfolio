@@ -37,7 +37,7 @@ const FALLBACK_PROJECTS: Project[] = [
     gradient: "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
     emoji: "🩺",
     github: "https://github.com/PATCH-KFCX/PATCH2",
-    demo: undefined,
+    demo: "https://drive.google.com/file/d/1f3waoCEy2FCTDgwHbRVcMwPZaNkhrRix/view?usp=sharing",
   },
 ];
 
@@ -90,10 +90,9 @@ function ProjectCard({
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
-              objectPosition: "center",
+              objectFit: "cover",
+              objectPosition: "top center",
               display: "block",
-              background: "var(--bg3)",
             }}
           />
         ) : (
@@ -196,7 +195,7 @@ function ProjectCard({
               rel="noreferrer"
               style={btnSecondary}
             >
-              Live Demo
+              Watch Demo
             </a>
           )}
         </div>
