@@ -1,8 +1,34 @@
 # Kristopher Noel — Portfolio
 
-> React 18 + Vite + **TypeScript** frontend · **FastAPI** Python backend · Gmail SMTP contact form
-
 🌐 **Live:** [krisnoelportfolio.netlify.app](https://krisnoelportfolio.netlify.app)
+
+---
+
+## What is this?
+
+This is my personal developer portfolio — a full-stack web application that showcases who I am as a software engineer, the projects I've built, my technical skills, and how to get in touch with me. It's designed to give anyone — recruiters, collaborators, or fellow developers — a clear and honest picture of what I can do.
+
+## Why was it built?
+
+As a software engineer, a resume only tells part of the story. I built this portfolio to have a living, interactive space where I can show my work rather than just describe it. The goal is to represent my identity as an engineer: where I come from, what I care about building, and the projects I'm proud of.
+
+## What problem does it solve?
+
+Breaking into software engineering — especially without a traditional background — means you have to prove yourself through what you've built. This portfolio solves the problem of visibility: it puts my projects, skills, and story in one accessible place so that the right people can find me and see the depth of my work beyond a one-page resume.
+
+---
+
+## Tech Stack
+
+| Layer           | Technology                           |
+| --------------- | ------------------------------------ |
+| Frontend        | React 18 + Vite + TypeScript         |
+| Styling         | CSS custom properties (no framework) |
+| Backend         | Python 3.12 + FastAPI                |
+| Validation      | Pydantic v2                          |
+| Email           | Gmail SMTP (`smtplib`)               |
+| Frontend deploy | Netlify                              |
+| Backend deploy  | Render                               |
 
 ---
 
