@@ -6,7 +6,7 @@ export interface Project {
   title: string;
   desc: string;
   stack: string[];
-  image: string; // imported asset path or URL
+  image?: string; // injected on the frontend from local assets
   gradient: string; // fallback gradient if image fails to load
   emoji: string;
   github: string;

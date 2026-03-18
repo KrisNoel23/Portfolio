@@ -116,24 +116,32 @@ Your old files map to the new structure like this:
 
 ## Adding a New Project
 
-Edit `backend/main.py` — add to the `PROJECTS` list:
+Projects are stored in PostgreSQL. To add one, insert a row directly:
 
-```python
-Project(
-    id=3,
-    featured=False,
-    badge="Personal Project",
-    title="Your Project Name",
-    desc="What it does and why it matters.",
-    stack=["React", "FastAPI", "PostgreSQL"],
-    gradient="linear-gradient(135deg, #yourcolor 0%, #0d0d0f 100%)",
-    emoji="🚀",
-    github="https://github.com/Kristopher-Noel/your-repo",
-    demo="https://your-live-url.com",
-)
+```sql
+INSERT INTO projects (featured, badge, title, desc, stack, gradient, emoji, github, demo)
+VALUES (
+  false,
+  'Personal Project',
+  'Your Project Name',
+  'What it does and why it matters.',
+  '["React", "FastAPI", "PostgreSQL"]',
+  'linear-gradient(135deg, #yourcolor 0%, #0d0d0f 100%)',
+  '🚀',
+  'https://github.com/Kristopher-Noel/your-repo',
+  'https://your-live-url.com'
+);
 ```
 
-Then add a screenshot to `frontend/src/assets/` and reference it in `Projects.tsx`.
+Then add a screenshot to `frontend/src/assets/` and register it in the `PROJECT_IMAGES` map in `Projects.tsx`:
+
+```tsx
+const PROJECT_IMAGES: Record<number, string> = {
+  1: moodioImg,
+  2: patchImg,
+  3: yourNewImg,  // add this line
+};
+```
 
 ---
 

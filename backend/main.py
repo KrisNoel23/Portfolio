@@ -1,6 +1,6 @@
 """
 Kristopher Noel — Portfolio Backend
-FastAPI + Gmail SMTP contact form
+FastAPI + PostgreSQL projects + Gmail SMTP contact form
 """
 
 from fastapi import FastAPI, HTTPException
@@ -12,11 +12,100 @@ import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
+import json
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = FastAPI(title="Kris Noel Portfolio API", version="1.0.0")
+
+
+# ── Database ───────────────────────────────────────────────────────────────────
+def get_db():
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
+
+
+SEED_PROJECTS = [
+    {
+        "id": 1,
+        "featured": True,
+        "badge": "⭐ Capstone Project",
+        "title": "Moodio",
+        "desc": (
+            "A full-stack music mood-tracking app integrating Spotify's Web API and Web "
+            "Playback SDK. Users log their emotional state, get dynamic mood-based "
+            "recommendations, and build a personal favorites library — with seamless "
+            "Spotify OAuth and real-time in-browser playback. Refactored from a monolithic "
+            "1,300-line server into clean modular architecture."
+        ),
+        "stack": [
+            "React + TypeScript", "Node.js / Express", "PostgreSQL",
+            "Spotify Web API", "Spotify Playback SDK", "OAuth", "Render",
+        ],
+        "gradient": "linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
+        "emoji": "🎵",
+        "github": "https://github.com/Kristopher-Noel/Moodio",
+        "demo": None,
+    },
+    {
+        "id": 2,
+        "featured": False,
+        "badge": "Team Project",
+        "title": "PATCH",
+        "desc": (
+            "A web platform that empowers individuals—especially those managing chronic "
+            "conditions like diabetes—to track symptoms, medications, insulin use, and pain "
+            "levels in one centralized, user-friendly space. PATCH bridges the communication "
+            "gap between patients and healthcare providers by organizing health data into a "
+            "clear, visual timeline that improves diagnosis and care outcomes."
+        ),
+        "stack": ["React", "Node.js", "Express", "PostgreSQL", "Knex", "BCrypt"],
+        "gradient": "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
+        "emoji": "🩺",
+        "github": "https://github.com/PATCH-KFCX/PATCH2",
+        "demo": "https://drive.google.com/file/d/1f3waoCEy2FCTDgwHbRVcMwPZaNkhrRix/view?usp=sharing",
+    },
+]
+
+
+@app.on_event("startup")
+def startup() -> None:
+    """Create the projects table and seed it if empty."""
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS projects (
+            id        SERIAL PRIMARY KEY,
+            featured  BOOLEAN  NOT NULL DEFAULT FALSE,
+            badge     TEXT     NOT NULL,
+            title     TEXT     NOT NULL,
+            desc      TEXT     NOT NULL,
+            stack     JSONB    NOT NULL DEFAULT '[]',
+            gradient  TEXT     NOT NULL,
+            emoji     TEXT     NOT NULL,
+            github    TEXT     NOT NULL,
+            demo      TEXT
+        )
+    """)
+    cur.execute("SELECT COUNT(*) FROM projects")
+    if cur.fetchone()[0] == 0:
+        for p in SEED_PROJECTS:
+            cur.execute(
+                """
+                INSERT INTO projects (id, featured, badge, title, desc, stack, gradient, emoji, github, demo)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    p["id"], p["featured"], p["badge"], p["title"], p["desc"],
+                    json.dumps(p["stack"]), p["gradient"], p["emoji"],
+                    p["github"], p["demo"],
+                ),
+            )
+    conn.commit()
+    cur.close()
+    conn.close()
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
 app.add_middleware(
@@ -51,49 +140,6 @@ class Project(BaseModel):
     # Note: `image` is not served from backend — frontend injects local assets
 
 
-# ── Data ──────────────────────────────────────────────────────────────────────
-# To add a new project: add an entry here. Frontend reflects it automatically.
-PROJECTS: List[Project] = [
-    Project(
-        id=1,
-        featured=True,
-        badge="⭐ Capstone Project",
-        title="Moodio",
-        desc=(
-            "A full-stack music mood-tracking app integrating Spotify's Web API and Web "
-            "Playback SDK. Users log their emotional state, get dynamic mood-based "
-            "recommendations, and build a personal favorites library — with seamless "
-            "Spotify OAuth and real-time in-browser playback. Refactored from a monolithic "
-            "1,300-line server into clean modular architecture."
-        ),
-        stack=[
-            "React + TypeScript", "Node.js / Express", "PostgreSQL",
-            "Spotify Web API", "Spotify Playback SDK", "OAuth", "Render",
-        ],
-        gradient="linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
-        emoji="🎵",
-        github="https://github.com/Kristopher-Noel/Moodio",
-        demo=None,  # Replace with live URL when available
-    ),
-    Project(
-        id=2,
-        featured=False,
-        badge="Team Project",
-        title="PATCH",
-        desc=(
-            "A collaborative health tracking application built with a team. "
-            "Focused on intuitive UX for logging daily wellness metrics, "
-            "with a RESTful API backend and production deployment on Render."
-        ),
-        stack=["JavaScript", "Node.js", "Express", "PostgreSQL"],
-        gradient="linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
-        emoji="🩺",
-        github="https://github.com/PATCH-KFCX/PATCH2",
-        demo=None,
-    ),
-]
-
-
 # ── Routes ────────────────────────────────────────────────────────────────────
 @app.get("/")
 def root() -> dict:
@@ -102,8 +148,14 @@ def root() -> dict:
 
 @app.get("/api/projects", response_model=List[Project])
 def get_projects() -> List[Project]:
-    """Return all portfolio projects."""
-    return PROJECTS
+    """Return all portfolio projects from the database."""
+    conn = get_db()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SELECT * FROM projects ORDER BY featured DESC, id ASC")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return [Project(**row) for row in rows]
 
 
 @app.post("/api/contact")

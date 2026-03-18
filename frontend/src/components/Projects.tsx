@@ -1,45 +1,15 @@
-import { useState, CSSProperties } from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
 import patchImg from "../assets/patch.png";
 
-const FALLBACK_PROJECTS: Project[] = [
-  {
-    id: 1,
-    featured: true,
-    badge: "⭐ Capstone Project",
-    title: "Moodio",
-    desc: "A full-stack music mood-tracking app integrating Spotify's Web API and Web Playback SDK. Users log their emotional state, get dynamic mood-based recommendations, and build a personal favorites library — with seamless Spotify OAuth and real-time in-browser playback. Refactored from a monolithic 1,300-line server into clean modular architecture.",
-    stack: [
-      "React + TypeScript",
-      "Node.js / Express",
-      "PostgreSQL",
-      "Spotify Web API",
-      "Spotify Playback SDK",
-      "OAuth",
-      "Render",
-    ],
-    image: moodioImg,
-    gradient: "linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
-    emoji: "🎵",
-    github: "https://github.com/moodio-project/Moodio",
-    demo: undefined,
-  },
-  {
-    id: 2,
-    featured: false,
-    badge: "Team Project",
-    title: "PATCH",
-    desc: "A web platform that empowers individuals—especially those managing chronic conditions like diabetes—to track symptoms, medications, insulin use, and pain levels in one centralized, user-friendly space. PATCH bridges the communication gap between patients and healthcare providers by organizing health data into a clear, visual timeline that improves diagnosis and care outcomes.",
-    stack: ["React", "Node.js", "Express", "PostgreSQL", "Knex", "BCrypt"],
-    image: patchImg,
-    gradient: "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
-    emoji: "🩺",
-    github: "https://github.com/PATCH-KFCX/PATCH2",
-    demo: "https://drive.google.com/file/d/1f3waoCEy2FCTDgwHbRVcMwPZaNkhrRix/view?usp=sharing",
-  },
-];
+// Map project IDs to local screenshot assets.
+// Add a new entry here whenever you add a new project to the DB.
+const PROJECT_IMAGES: Record<number, string> = {
+  1: moodioImg,
+  2: patchImg,
+};
 
 interface ProjectCardProps {
   project: Project;
@@ -205,8 +175,21 @@ function ProjectCard({
 }
 
 export default function Projects(): JSX.Element {
-  const featured = FALLBACK_PROJECTS.find((p) => p.featured);
-  const rest = FALLBACK_PROJECTS.filter((p) => !p.featured);
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((r) => r.json())
+      .then((data: Project[]) => {
+        setProjects(data.map((p) => ({ ...p, image: PROJECT_IMAGES[p.id] })));
+      })
+      .catch(() => {
+        // API unavailable — render nothing and let the empty state show
+      });
+  }, []);
+
+  const featured = projects.find((p) => p.featured);
+  const rest = projects.filter((p) => !p.featured);
 
   return (
     <section
