@@ -87,7 +87,7 @@ def startup() -> None:
             title     TEXT     NOT NULL,
             type      TEXT     NOT NULL DEFAULT '',
             tags      JSONB    NOT NULL DEFAULT '[]',
-            desc      TEXT     NOT NULL,
+            "desc"    TEXT     NOT NULL,
             stack     JSONB    NOT NULL DEFAULT '[]',
             gradient  TEXT     NOT NULL,
             emoji     TEXT     NOT NULL,
@@ -100,7 +100,7 @@ def startup() -> None:
         for p in SEED_PROJECTS:
             cur.execute(
                 """
-                INSERT INTO projects (id, featured, badge, title, type, tags, desc, stack, gradient, emoji, github, demo)
+                INSERT INTO projects (id, featured, badge, title, type, tags, "desc", stack, gradient, emoji, github, demo)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
