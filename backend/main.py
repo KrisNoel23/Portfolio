@@ -121,6 +121,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:3001",
         "https://krisnoelportfolio.netlify.app",
+        "https://portfolio-production-7102.up.railway.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

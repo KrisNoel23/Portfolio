@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent, CSSProperties } from "react";
 import { SectionLabel } from "./SectionUI.tsx";
+import { API_BASE } from "../config.ts";
 
 interface ContactPayload {
   name: string;
@@ -39,7 +40,7 @@ export default function Contact(): JSX.Element {
     e.preventDefault();
     setStatus("sending");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

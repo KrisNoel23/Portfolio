@@ -1,5 +1,6 @@
 import { useState, useEffect, CSSProperties } from "react";
 import { Link } from "react-router-dom";
+import { API_BASE } from "../config.ts";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
@@ -179,7 +180,7 @@ export default function Projects(): JSX.Element {
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
-    fetch("/api/projects")
+    fetch(`${API_BASE}/api/projects`)
       .then((r) => r.json())
       .then((data: Project[]) => {
         setProjects(data.map((p) => ({ ...p, image: PROJECT_IMAGES[p.id] })));
