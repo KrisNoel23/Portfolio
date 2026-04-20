@@ -33,6 +33,8 @@ SEED_PROJECTS = [
         "featured": True,
         "badge": "⭐ Capstone Project",
         "title": "Moodio",
+        "type": "Full-Stack",
+        "tags": ["React", "TypeScript", "Node.js", "PostgreSQL", "Spotify API", "OAuth"],
         "desc": (
             "A full-stack music mood-tracking app integrating Spotify's Web API and Web "
             "Playback SDK. Users log their emotional state, get dynamic mood-based "
@@ -54,6 +56,8 @@ SEED_PROJECTS = [
         "featured": False,
         "badge": "Team Project",
         "title": "PATCH",
+        "type": "Full-Stack",
+        "tags": ["React", "Node.js", "Express", "PostgreSQL"],
         "desc": (
             "A web platform that empowers individuals—especially those managing chronic "
             "conditions like diabetes—to track symptoms, medications, insulin use, and pain "
@@ -81,6 +85,8 @@ def startup() -> None:
             featured  BOOLEAN  NOT NULL DEFAULT FALSE,
             badge     TEXT     NOT NULL,
             title     TEXT     NOT NULL,
+            type      TEXT     NOT NULL DEFAULT '',
+            tags      JSONB    NOT NULL DEFAULT '[]',
             desc      TEXT     NOT NULL,
             stack     JSONB    NOT NULL DEFAULT '[]',
             gradient  TEXT     NOT NULL,
@@ -94,13 +100,14 @@ def startup() -> None:
         for p in SEED_PROJECTS:
             cur.execute(
                 """
-                INSERT INTO projects (id, featured, badge, title, desc, stack, gradient, emoji, github, demo)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO projects (id, featured, badge, title, type, tags, desc, stack, gradient, emoji, github, demo)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
-                    p["id"], p["featured"], p["badge"], p["title"], p["desc"],
-                    json.dumps(p["stack"]), p["gradient"], p["emoji"],
-                    p["github"], p["demo"],
+                    p["id"], p["featured"], p["badge"], p["title"],
+                    p["type"], json.dumps(p["tags"]),
+                    p["desc"], json.dumps(p["stack"]),
+                    p["gradient"], p["emoji"], p["github"], p["demo"],
                 ),
             )
     conn.commit()
@@ -131,6 +138,8 @@ class Project(BaseModel):
     featured: bool
     badge: str
     title: str
+    type: str
+    tags: List[str]
     desc: str
     stack: List[str]
     gradient: str

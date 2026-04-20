@@ -3,6 +3,8 @@ export interface Project {
   id: number;
   featured: boolean;
   badge: string;
+  type: string;
+  tags: string[];
   title: string;
   desc: string;
   stack: string[];

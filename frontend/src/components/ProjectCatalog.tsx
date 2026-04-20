@@ -1,48 +1,31 @@
 import { useState, useEffect, CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import Cursor from "./Cursor.tsx";
+import NavBar from "./NavBar.tsx";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
 import moodioImg from "../assets/moodio.png";
 import patchImg from "../assets/patch.png";
 
-// Map project IDs to local screenshot assets.
-// Add a new entry here whenever you add a new project to the DB.
 const PROJECT_IMAGES: Record<number, string> = {
   1: moodioImg,
   2: patchImg,
 };
 
-interface ProjectCardProps {
-  project: Project;
-  featured?: boolean;
-}
-
-function ProjectCard({
-  project: p,
-  featured = false,
-}: ProjectCardProps): JSX.Element {
+function ProjectCard({ project: p }: { project: Project }): JSX.Element {
   const [imgError, setImgError] = useState<boolean>(false);
-
-  const cardStyle: CSSProperties = {
-    background: "var(--bg2)",
-    border: "1px solid var(--border)",
-    borderRadius: 16,
-    overflow: "hidden",
-    transition: "all 0.3s",
-    display: "flex",
-    flexDirection: featured ? "row" : "column",
-    minHeight: featured ? 360 : "auto",
-    marginBottom: featured ? "1.5rem" : 0,
-  };
-
-  const imgWrapStyle: CSSProperties = featured
-    ? { width: "52%", flexShrink: 0, overflow: "hidden", position: "relative" }
-    : { height: 200, overflow: "hidden", position: "relative" };
 
   return (
     <div
       className="reveal"
-      style={cardStyle}
+      style={{
+        background: "var(--bg2)",
+        border: "1px solid var(--border)",
+        borderRadius: 16,
+        overflow: "hidden",
+        transition: "all 0.3s",
+        display: "flex",
+        flexDirection: "column",
+      }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = "var(--accent)";
         e.currentTarget.style.transform = "translateY(-6px)";
@@ -52,7 +35,7 @@ function ProjectCard({
         e.currentTarget.style.transform = "none";
       }}
     >
-      <div style={imgWrapStyle}>
+      <div style={{ height: 200, overflow: "hidden", position: "relative" }}>
         {p.image && !imgError ? (
           <img
             src={p.image}
@@ -105,7 +88,7 @@ function ProjectCard({
         </div>
         <h3
           style={{
-            fontSize: featured ? "1.8rem" : "1.4rem",
+            fontSize: "1.4rem",
             fontWeight: 800,
             color: "var(--white)",
             marginBottom: "0.75rem",
@@ -175,8 +158,10 @@ function ProjectCard({
   );
 }
 
-export default function Projects(): JSX.Element {
+export default function ProjectCatalog(): JSX.Element {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedType, setSelectedType] = useState<string>("All");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
     fetch("/api/projects")
@@ -184,48 +169,109 @@ export default function Projects(): JSX.Element {
       .then((data: Project[]) => {
         setProjects(data.map((p) => ({ ...p, image: PROJECT_IMAGES[p.id] })));
       })
-      .catch(() => {
-        // API unavailable — render nothing and let the empty state show
-      });
+      .catch(() => {});
   }, []);
 
-  const featured = projects.find((p) => p.featured);
-  const rest = projects.filter((p) => !p.featured);
+  const types = ["All", ...Array.from(new Set(projects.map((p) => p.type)))];
+  const allTags = Array.from(new Set(projects.flatMap((p) => p.tags)));
+
+  const filtered = projects.filter((p) => {
+    const typeMatch = selectedType === "All" || p.type === selectedType;
+    const tagMatch = selectedTags.every((t) => p.tags.includes(t));
+    return typeMatch && tagMatch;
+  });
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
+    );
+  };
 
   return (
-    <section
-      id="projects"
-      style={{
-        padding: "8rem 4rem",
-        maxWidth: 1200,
-        margin: "0 auto",
-        position: "relative",
-        zIndex: 1,
-      }}
-    >
-      <SectionLabel>Work</SectionLabel>
-      <SectionTitle>Projects I've built.</SectionTitle>
-
-      {featured && <ProjectCard project={featured} featured />}
-      <div
+    <>
+      <Cursor />
+      <NavBar />
+      <section
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-          gap: "1.5rem",
+          padding: "8rem 4rem",
+          maxWidth: 1200,
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        {rest.map((p) => (
-          <ProjectCard key={p.id} project={p} />
-        ))}
-      </div>
-      <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
-        <Link to="/projects" style={btnSecondary}>
-          View All Projects →
-        </Link>
-      </div>
-    </section>
+        <SectionLabel>All Work</SectionLabel>
+        <SectionTitle>Projects I've built.</SectionTitle>
+
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "1rem" }}
+        >
+          {types.map((t) => (
+            <button
+              key={t}
+              onClick={() => setSelectedType(t)}
+              style={selectedType === t ? pillActive : pillInactive}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
+        <div
+          style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "3rem" }}
+        >
+          {allTags.map((tag) => (
+            <button
+              key={tag}
+              onClick={() => toggleTag(tag)}
+              style={selectedTags.includes(tag) ? pillActive : pillInactive}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+            gap: "1.5rem",
+          }}
+        >
+          {filtered.map((p) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
+
+const pillBase: CSSProperties = {
+  fontFamily: "'Space Mono', monospace",
+  fontSize: "0.65rem",
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  padding: "0.4rem 1rem",
+  borderRadius: 20,
+  cursor: "pointer",
+};
+
+const pillActive: CSSProperties = {
+  ...pillBase,
+  border: "none",
+  background: "var(--accent)",
+  color: "var(--bg)",
+  fontWeight: 700,
+};
+
+const pillInactive: CSSProperties = {
+  ...pillBase,
+  background: "var(--bg2)",
+  border: "1px solid var(--border)",
+  color: "var(--muted)",
+  fontWeight: 400,
+};
 
 const btnPrimary: CSSProperties = {
   fontFamily: "'Space Mono', monospace",
@@ -239,6 +285,7 @@ const btnPrimary: CSSProperties = {
   color: "var(--bg)",
   fontWeight: 700,
 };
+
 const btnSecondary: CSSProperties = {
   fontFamily: "'Space Mono', monospace",
   fontSize: "0.72rem",

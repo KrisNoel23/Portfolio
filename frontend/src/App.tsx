@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Cursor from "./components/Cursor.tsx";
 import NavBar from "./components/NavBar.tsx";
 import Hero from "./components/Hero.tsx";
@@ -7,8 +8,9 @@ import Skills from "./components/Skills.tsx";
 import Projects from "./components/Projects.tsx";
 import Contact from "./components/Contact.tsx";
 import Footer from "./components/Footer.tsx";
+import ProjectCatalog from "./components/ProjectCatalog.tsx";
 
-export default function App(): JSX.Element {
+function Home(): JSX.Element {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,5 +37,16 @@ export default function App(): JSX.Element {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function App(): JSX.Element {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<ProjectCatalog />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
