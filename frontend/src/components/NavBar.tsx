@@ -63,6 +63,7 @@ export default function NavBar(): JSX.Element {
             <li key={label}>
               <a
                 href={href}
+                className="nav-link"
                 style={{
                   fontFamily: "'Space Mono', monospace",
                   fontSize: "0.8rem",
@@ -70,14 +71,7 @@ export default function NavBar(): JSX.Element {
                   textDecoration: "none",
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  transition: "color 0.2s",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--accent)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--muted)")
-                }
               >
                 {label}
               </a>

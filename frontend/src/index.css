@@ -81,3 +81,23 @@ button {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+.nav-link:hover {
+  color: var(--accent) !important;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
