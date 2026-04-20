@@ -117,7 +117,17 @@ export default function Hero(): JSX.Element {
           justifyContent: "center",
         }}
       >
-        <div style={photoFrameStyle}>
+        <div
+          style={photoFrameStyle}
+          onMouseEnter={(e) => {
+            const img = e.currentTarget.querySelector("img") as HTMLImageElement | null;
+            if (img) img.style.filter = "grayscale(0%)";
+          }}
+          onMouseLeave={(e) => {
+            const img = e.currentTarget.querySelector("img") as HTMLImageElement | null;
+            if (img) img.style.filter = "grayscale(100%)";
+          }}
+        >
           {/* Decorative ring */}
           <div
             style={{
@@ -240,6 +250,8 @@ const photoStyle: CSSProperties = {
   objectFit: "cover",
   objectPosition: "center top",
   display: "block",
+  filter: "grayscale(100%)",
+  transition: "filter 1000ms ease",
 };
 
 const btnPrimary: CSSProperties = {
