@@ -90,6 +90,41 @@ export default function Skills(): JSX.Element {
         <SectionTitle>What I work with.</SectionTitle>
 
         <div
+          style={{
+            overflow: "hidden",
+            marginBottom: "2.5rem",
+            borderTop: "1px solid var(--border)",
+            borderBottom: "1px solid var(--border)",
+            padding: "1rem 0",
+          }}
+        >
+          <div
+            style={{
+              display: "inline-flex",
+              animation: "marquee 30s linear infinite",
+            }}
+          >
+            {[...SKILLS, ...SKILLS].map((s, i) => (
+              <span
+                key={i}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  marginRight: "2.5rem",
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: "0.75rem",
+                  color: "var(--muted)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {s.icon} {s.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div
           className="reveal"
           style={{
             display: "grid",
