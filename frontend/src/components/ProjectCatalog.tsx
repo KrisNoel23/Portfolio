@@ -1,8 +1,9 @@
 import { useState, useEffect, CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import Cursor from "./Cursor.tsx";
-import NavBar from "./NavBar.tsx";
 import { SectionLabel, SectionTitle } from "./SectionUI.tsx";
 import type { Project } from "../types/index.ts";
+import { API_BASE } from "../config.ts";
 import moodioImg from "../assets/moodio.png";
 import patchImg from "../assets/patch.png";
 
@@ -164,7 +165,7 @@ export default function ProjectCatalog(): JSX.Element {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch("/api/projects")
+    fetch(`${API_BASE}/api/projects`)
       .then((r) => r.json())
       .then((data: Project[]) => {
         setProjects(data.map((p) => ({ ...p, image: PROJECT_IMAGES[p.id] })));
@@ -190,7 +191,46 @@ export default function ProjectCatalog(): JSX.Element {
   return (
     <>
       <Cursor />
-      <NavBar />
+      <nav
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "1.4rem 4rem",
+          background: "rgba(13,13,15,0.88)",
+          backdropFilter: "blur(14px)",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <Link
+          to="/"
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "1rem",
+            color: "var(--accent)",
+            textDecoration: "none",
+            letterSpacing: "0.05em",
+          }}
+        >
+          KN<span style={{ color: "var(--text)" }}>.</span>
+        </Link>
+        <Link
+          to="/"
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "0.8rem",
+            color: "var(--muted)",
+            textDecoration: "none",
+          }}
+        >
+          ← Back to Home
+        </Link>
+      </nav>
       <section
         style={{
           padding: "8rem 4rem",

@@ -69,7 +69,7 @@ SEED_PROJECTS = [
         "gradient": "linear-gradient(135deg, #06d6a0 0%, #0d0d0f 100%)",
         "emoji": "🩺",
         "github": "https://github.com/PATCH-KFCX/PATCH2",
-        "demo": "https://drive.google.com/file/d/1f3waoCEy2FCTDgwHbRVcMwPZaNkhrRix/view?usp=sharing",
+        "demo": "https://patch-2-xjb7-k5gltlbyi-nando81ks-projects.vercel.app/",
     },
 ]
 
