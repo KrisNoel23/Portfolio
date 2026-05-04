@@ -22,7 +22,7 @@ const CONTACT_LINKS = [
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/kristhesoftwareengineer",
   },
-  { emoji: "🐙", label: "GitHub", href: "https://github.com/Kristopher-Noel" },
+  { emoji: "🐙", label: "GitHub", href: "https://github.com/KrisNoel23" },
 ];
 
 export default function Contact(): JSX.Element {

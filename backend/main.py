@@ -48,7 +48,7 @@ SEED_PROJECTS = [
         ],
         "gradient": "linear-gradient(135deg, #1db954 0%, #191414 60%, #7c3aed 100%)",
         "emoji": "🎵",
-        "github": "https://github.com/Kristopher-Noel/Moodio",
+        "github": "https://github.com/KrisNoel23/Moodio",
         "demo": None,
     },
     {
