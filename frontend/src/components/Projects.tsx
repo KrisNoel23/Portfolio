@@ -190,6 +190,19 @@ export default function Projects(): JSX.Element {
       });
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.1 },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [projects]);
+
   const featured = projects.find((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
 

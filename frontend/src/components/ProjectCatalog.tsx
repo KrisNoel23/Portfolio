@@ -173,6 +173,19 @@ export default function ProjectCatalog(): JSX.Element {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add("visible");
+        });
+      },
+      { threshold: 0.1 },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [projects]);
+
   const types = ["All", ...Array.from(new Set(projects.map((p) => p.type)))];
   const allTags = Array.from(new Set(projects.flatMap((p) => p.tags)));
 
