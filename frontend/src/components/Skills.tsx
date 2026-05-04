@@ -59,15 +59,6 @@ function SkillCard({ icon, name, level }: Skill): JSX.Element {
       >
         {name}
       </span>
-      <span
-        style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: "0.65rem",
-          color: "var(--muted)",
-        }}
-      >
-        {level}
-      </span>
     </div>
   );
 }
