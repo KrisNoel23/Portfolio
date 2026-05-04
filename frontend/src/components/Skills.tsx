@@ -167,10 +167,9 @@ export default function Skills(): JSX.Element {
                 marginBottom: "0.2rem",
               }}
             >
-              AWS Cloud Practitioner — In Progress
+              AWS Certified Cloud Practitioner ✓
             </span>
-            Studying CLF-C02 · IAM, EC2, S3, VPC, billing &amp; Well-Architected
-            Framework
+            Certified CCP · Now studying for Solutions Architect (SAA-C03)
           </div>
         </div>
       </div>
