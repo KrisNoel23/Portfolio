@@ -1,4 +1,5 @@
 import { useState, useEffect, CSSProperties } from "react";
+import resumePdf from "../assets/Kristopher Noel's Software Engineering Resume.pdf";
 
 interface NavLink {
   label: string;
@@ -78,6 +79,26 @@ export default function NavBar(): JSX.Element {
             </li>
           ))}
         </ul>
+
+        <a
+          href={resumePdf}
+          download
+          className="desktop-nav"
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "0.8rem",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase" as CSSProperties["textTransform"],
+            padding: "0.5rem 1.25rem",
+            border: "1px solid var(--accent)",
+            borderRadius: 4,
+            color: "var(--accent)",
+            textDecoration: "none",
+            display: "inline-block",
+          }}
+        >
+          Resume ↓
+        </a>
 
         <button
           className="hamburger-btn"
