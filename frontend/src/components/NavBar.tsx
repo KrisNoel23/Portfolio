@@ -1,5 +1,4 @@
 import { useState, useEffect, CSSProperties } from "react";
-import resumePdf from "../assets/Kristopher Noel's Software Engineering Resume.pdf";
 
 interface NavLink {
   label: string;
@@ -81,7 +80,7 @@ export default function NavBar(): JSX.Element {
         </ul>
 
         <a
-          href={resumePdf}
+          href="/resume.pdf"
           download
           className="desktop-nav"
           style={{
